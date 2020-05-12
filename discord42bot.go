@@ -1,25 +1,24 @@
 package main
 
 import (
-	api42 "discord42bot/api42"
 	"fmt"
 )
 
-func main(){
-	discord42Bot()
+func initUsers(api Api42) {
+
+	api.UserData.getUserInfo("mlabouri", api.Token)
+	fmt.Println("Got info from mlabouri")
+	fmt.Println(api.UserData)
 }
 
-func discord42Bot() {
+func main() {
+
+	api := Api42{}
+
 	fmt.Println("Started Bot")
 
-	token := api42.OAuthToken{
-		AccessToken: "test",
-		TokenType:   "tes",
-		ExpiresIn:   15,
-	}
-
+	api.Token.getToken()
 	fmt.Println("42 Token acquired")
-	fmt.Println("Expires in:", token.ExpiresIn)
-
+	fmt.Println("Expires in:", api.Token.ExpiresIn)
 
 }
