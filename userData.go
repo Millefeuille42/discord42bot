@@ -3,11 +3,12 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/bwmarrin/discordgo"
 	"io/ioutil"
 	"os"
 )
 
-func compareData(fileData []byte, userData UserInfoParsed) {
+func compareData(fileData []byte, userData UserInfoParsed, session *discordgo.Session) {
 	fileDataJson := UserInfoParsed{}
 
 	err := json.Unmarshal(fileData, &fileDataJson)
@@ -16,26 +17,26 @@ func compareData(fileData []byte, userData UserInfoParsed) {
 	if fileDataJson.Location != userData.Location {
 		switch {
 		case fileDataJson.Location == "null":
-			announceLocation("login", userData, fileDataJson)
+			announceLocation("login", userData, fileDataJson, session)
 		case userData.Location == "null":
-			announceLocation("logout", userData, fileDataJson)
+			announceLocation("logout", userData, fileDataJson, session)
 		default:
-			announceLocation("newPos", userData, fileDataJson)
+			announceLocation("newPos", userData, fileDataJson, session)
 		}
 	}
 
 	for project, newProjectData := range userData.Projects {
 		if oldProjectData, exists := fileDataJson.Projects[project]; !exists {
-			annouceProject("started", userData, project)
+			announceProject("started", userData, project, session)
 		} else if status := newProjectData.ProjectStatus; status != oldProjectData.ProjectStatus {
 			if status == "finished" {
-				announceProject(status, userData, project)
+				announceProject(status, userData, project, session)
 			}
 		}
 	}
 }
 
-func checkUserFile(user string, userData UserInfoParsed) {
+func checkUserFile(user string, userData UserInfoParsed, session *discordgo.Session) {
 	var path = fmt.Sprintf("./data/%s.json", user)
 
 	_, err := os.Stat(path)
@@ -50,7 +51,7 @@ func checkUserFile(user string, userData UserInfoParsed) {
 	} else {
 		fileData, err := ioutil.ReadFile(path)
 		checkError(err)
-		compareData(fileData, userData)
+		compareData(fileData, userData, session)
 	}
 
 	jsonData, err := json.MarshalIndent(userData, "", "\t")
