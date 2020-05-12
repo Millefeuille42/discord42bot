@@ -36,7 +36,6 @@ type UserInfo struct {
 	ProjectsUsers []struct {
 		Status    string `json:"status"`
 		CursusIds []int  `json:"cursus_ids"`
-		Validated bool   `json:"validated?"`
 		Project   struct {
 			Name string `json:"name"`
 		} `json:"project"`
@@ -50,48 +49,32 @@ func (token *OAuthToken) getToken() {
 	var req = fmt.Sprintf("%s?grant_type=client_credentials&client_id=%s&client_secret=%s", url, uid, secret)
 
 	response, err := http.Post(req, "application/x-www-form-urlencoded", bytes.NewBuffer([]byte("")))
-	if err != nil {
-		panic(err)
-	}
+	checkError(err)
 
 	body, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-		panic(err)
-	}
+	checkError(err)
 
-	if response.Body.Close() != nil {
-		panic(err)
-	}
+	defer response.Body.Close()
 
-	if json.Unmarshal(body, &token) != nil {
-		panic(err)
-	}
+	checkError(json.Unmarshal(body, &token))
 }
 
 func (userData *UserInfo) getUserInfo(user string, token OAuthToken) {
 	var url = fmt.Sprintf("https://api.intra.42.fr/v2/users/%s/", user)
 
 	req, err := http.NewRequest("GET", url, bytes.NewBuffer([]byte("")))
-	if err != nil {
-		panic(err)
-	}
+	checkError(err)
+
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", token.AccessToken))
 
 	res, err := http.DefaultClient.Do(req)
-	if err != nil {
-		panic(err)
-	}
+	checkError(err)
 
 	body, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		panic(err)
-	}
+	checkError(err)
 
-	if res.Body.Close() != nil {
-		panic(err)
-	}
+	defer res.Body.Close()
 
-	if json.Unmarshal(body, &userData) != nil {
-		panic(err)
-	}
+	checkError(json.Unmarshal(body, &userData))
+
 }
