@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/bwmarrin/discordgo"
+	"github.com/joho/godotenv"
 	"os"
 	"os/signal"
 	"syscall"
@@ -34,6 +35,9 @@ func main() {
 	api := Api42{}
 
 	fmt.Println("Started init")
+
+	err := godotenv.Load()
+	checkError(err)
 
 	api.Token.getToken()
 	fmt.Println("42 Token acquired")
