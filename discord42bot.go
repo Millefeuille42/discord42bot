@@ -31,7 +31,6 @@ func writeUsers(api Api42, session *discordgo.Session, callNbr int) {
 }
 
 func main() {
-
 	api := Api42{}
 
 	fmt.Println("Started init")

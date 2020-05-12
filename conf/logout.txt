@@ -1,0 +1,6 @@
+%s vient de se deco.
+%s est partit.
+%s nous quitte.
+%s s'est enfui.
+%s ne code plus.
+%s vient de se deconnecter... Au revoir moussaillon! :'(

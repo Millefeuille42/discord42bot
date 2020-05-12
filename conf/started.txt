@@ -1,0 +1,1 @@
+%s vient de s'inscrire au projet %s! Bon courage a toi! Et n'oublies pas: %s

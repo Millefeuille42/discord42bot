@@ -1,0 +1,1 @@
+%s vient de valider le projet %s ! Bravo tu passes maintenant du niveau %f au niveau %f. D'autres amateurs ?
