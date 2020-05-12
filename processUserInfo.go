@@ -15,8 +15,8 @@ type UserInfoParsed struct {
 	Location        string
 	CorrectionPoint int
 	Wallet          int
+	BlackHole       int
 	Level           float64
-	BlackHole       time.Duration
 	Projects        map[string]Project
 }
 
@@ -35,7 +35,7 @@ func processUserInfo(userData UserInfo) UserInfoParsed {
 		userDataParsed.Location = "null"
 	}
 
-	userDataParsed.BlackHole = userData.CursusUsers[1].BlackHoledAt.Sub(time.Now())
+	userDataParsed.BlackHole = int(userData.CursusUsers[1].BlackHoledAt.Sub(time.Now()).Hours() / 24)
 	userDataParsed.Level = userData.CursusUsers[1].Level
 
 	userDataParsed.Projects = make(map[string]Project)
