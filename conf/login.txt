@@ -1,2 +1,2 @@
-%s est maintenant connecté(e) en %s. Bravo tu ne fais plus partie du clan des branleurs !
-%s nous a rejoint en %s!
+#{userName} est maintenant connecté(e) en #{newLocation}. Bravo tu ne fais plus partie du clan des branleurs !
+#{userName} nous a rejoint en #{newLocation}!

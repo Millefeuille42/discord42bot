@@ -1,6 +1,6 @@
-%s vient de se deco.
-%s est partit.
-%s nous quitte.
-%s s'est enfui.
-%s ne code plus.
-%s vient de se deconnecter... Au revoir moussaillon! :'(
+#{userName} vient de se deco.
+#{userName} est partit.
+#{userName} nous quitte.
+#{userName} s'est enfui.
+#{userName} ne code plus.
+#{userName} vient de se deconnecter... Au revoir moussaillon! :'(

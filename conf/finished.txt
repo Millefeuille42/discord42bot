@@ -1,1 +1,1 @@
-%s vient de valider le projet %s ! Bravo tu passes maintenant du niveau %f au niveau %f. D'autres amateurs ?
+#{userName} vient de valider le projet #{project} ! Bravo tu passes maintenant du niveau #{oldLevel} au niveau #{newLevel}. D'autres amateurs ?
