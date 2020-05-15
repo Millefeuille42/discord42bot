@@ -17,7 +17,7 @@ type levelNamePair struct {
 func leaderboard(session *discordgo.Session, message *discordgo.MessageCreate) {
 	var userList = os.Args
 	var userPair = make([]levelNamePair, len(userList)-1)
-	var leadMessage = fmt.Sprintf("@%s", message.Author.ID)
+	var leadMessage = fmt.Sprintf("<@%s>", message.Author.ID)
 	userDataParsed := UserInfoParsed{}
 
 	for i, user := range userList {
@@ -37,7 +37,7 @@ func leaderboard(session *discordgo.Session, message *discordgo.MessageCreate) {
 		if i > (len(userList) - 1) {
 			break
 		}
-		leadMessage = fmt.Sprintf("%s\n%2d: %-12s%.4f", leadMessage, i+1, user.name, user.level)
+		leadMessage = fmt.Sprintf("%s\n%2d: %-20s%.3f", leadMessage, i+1, user.name, user.level)
 	}
 	_, err := session.ChannelMessageSend(message.ChannelID, leadMessage)
 	checkError(err)
