@@ -34,7 +34,10 @@ func leaderboard(session *discordgo.Session, message *discordgo.MessageCreate) {
 	})
 
 	for i, user := range userPair {
-		leadMessage = fmt.Sprintf("%s\n%2d: %-9s%f", message, i+1, user.name, user.level)
+		if i > (len(userList) - 1) {
+			break
+		}
+		leadMessage = fmt.Sprintf("%s\n%2d: %-12s%.4f", leadMessage, i+1, user.name, user.level)
 	}
 	_, err := session.ChannelMessageSend(message.ChannelID, leadMessage)
 	checkError(err)
