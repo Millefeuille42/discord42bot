@@ -43,6 +43,7 @@ type UserInfo struct {
 }
 
 func (token *OAuthToken) getToken() {
+
 	var url = "https://api.intra.42.fr/oauth/token"
 	var uid = os.Getenv("APIUID")
 	var secret = os.Getenv("APISECRET")
@@ -76,5 +77,4 @@ func (userData *UserInfo) getUserInfo(user string, token OAuthToken) {
 	defer res.Body.Close()
 
 	checkError(json.Unmarshal(body, &userData))
-
 }

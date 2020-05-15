@@ -35,7 +35,7 @@ func main() {
 
 	fmt.Println("Started init")
 
-	err := godotenv.Load()
+	err := godotenv.Load("dev.env")
 	checkError(err)
 
 	api.Token.getToken()

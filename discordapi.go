@@ -19,7 +19,6 @@ func setVarsToMessage(phrase string, newData UserInfoParsed, oldData UserInfoPar
 }
 
 func announceLocation(param string, newData UserInfoParsed, oldData UserInfoParsed, session *discordgo.Session) {
-
 	switch param {
 	case "login":
 		message := setVarsToMessage(phrasePicker("conf/login.txt"), newData, oldData, "")

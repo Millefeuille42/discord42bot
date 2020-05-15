@@ -27,10 +27,10 @@ func compareData(fileData []byte, userData UserInfoParsed, session *discordgo.Se
 
 	for project, newProjectData := range userData.Projects {
 		if oldProjectData, exists := fileDataJson.Projects[project]; !exists {
-			announceProject("started", userData, project, session)
+			announceProject("started", userData, project, session, fileDataJson)
 		} else if status := newProjectData.ProjectStatus; status != oldProjectData.ProjectStatus {
 			if status == "finished" {
-				announceProject(status, userData, project, session)
+				announceProject(status, userData, project, session, fileDataJson)
 			}
 		}
 	}
