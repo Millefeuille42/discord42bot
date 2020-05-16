@@ -7,13 +7,13 @@ import (
 )
 
 func setVarsToMessage(phrase string, newData UserInfoParsed, oldData UserInfoParsed, project string) string {
-	strings.Replace(phrase, "#{userName}", newData.Login, -1)
-	strings.Replace(phrase, "#{project}", project, -1)
-	strings.Replace(phrase, "#{proverb}", phrasePicker("conf/proverb.txt"), -1)
-	strings.Replace(phrase, "#{oldLocation}", oldData.Location, -1)
-	strings.Replace(phrase, "#{newLocation}", newData.Location, -1)
-	strings.Replace(phrase, "#{oldLevel}", fmt.Sprintf("%f", oldData.Level), -1)
-	strings.Replace(phrase, "#{newLevel}", fmt.Sprintf("%f", newData.Level), -1)
+	phrase = strings.Replace(phrase, "#{userName}", newData.Login, -1)
+	phrase = strings.Replace(phrase, "#{project}", project, -1)
+	phrase = strings.Replace(phrase, "#{proverb}", phrasePicker("conf/proverbs.txt"), -1)
+	phrase = strings.Replace(phrase, "#{oldLocation}", oldData.Location, -1)
+	phrase = strings.Replace(phrase, "#{newLocation}", newData.Location, -1)
+	phrase = strings.Replace(phrase, "#{oldLevel}", fmt.Sprintf("%.2f", oldData.Level), -1)
+	phrase = strings.Replace(phrase, "#{newLevel}", fmt.Sprintf("%.2f", newData.Level), -1)
 
 	return phrase
 }
@@ -64,5 +64,13 @@ func messageHandler(session *discordgo.Session, message *discordgo.MessageCreate
 
 	if message.Content == "!leaderboard" {
 		leaderboard(session, message)
+	}
+	if strings.HasPrefix(message.Content, "!roadmap") {
+		arg := strings.Split(message.Content, "-")
+		if len(arg) > 1 {
+			roadmap(session, message, arg[1])
+		} else {
+			roadmap(session, message, "in_progress")
+		}
 	}
 }
