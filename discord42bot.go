@@ -21,7 +21,7 @@ func writeUsers(api Api42, session *discordgo.Session, callNbr int) {
 		userDataParsed = processUserInfo(api.UserData)
 		fmt.Println("\tProcessed raw data")
 		checkUserFile(user, userDataParsed, session)
-		time.Sleep(4000 * time.Millisecond)
+		time.Sleep(3000 * time.Millisecond)
 	}
 }
 

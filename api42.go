@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 )
 
@@ -65,11 +66,17 @@ func (userData *UserInfo) getUserInfo(user string, token OAuthToken) {
 
 	req, err := http.NewRequest("GET", url, bytes.NewBuffer([]byte("")))
 	checkError(err)
-
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", token.AccessToken))
 
 	res, err := http.DefaultClient.Do(req)
 	checkError(err)
+
+	if res.Status == "429 Too Many Requests" {
+		timeToSleep, _ := strconv.Atoi(res.Header["Retry-After"][0])
+		time.Sleep(time.Duration(timeToSleep+2) * time.Second)
+		res, err = http.DefaultClient.Do(req)
+		checkError(err)
+	}
 
 	body, err := ioutil.ReadAll(res.Body)
 	checkError(err)
