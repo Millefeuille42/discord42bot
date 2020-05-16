@@ -64,19 +64,16 @@ func template(session *discordgo.Session, message *discordgo.MessageCreate, obje
 }
 
 func roadmap(session *discordgo.Session, message *discordgo.MessageCreate, status string) {
+	if !Find([]string{"finished", "in_progress"}, status) {
+		return
+	}
+
 	roadMessage := ""
 	userList := os.Args
 	userDataParsed := UserInfoParsed{}
 	projectList := make(map[string]string, 0)
 
-	if !Find([]string{"finished", "in_progress"}, status) {
-		return
-	}
-
-	for i, user := range userList {
-		if i == 0 {
-			continue
-		}
+	for _, user := range userList[1:] {
 		fileData, err := ioutil.ReadFile(fmt.Sprintf("data/%s.json", user))
 		checkError(err)
 		err = json.Unmarshal(fileData, &userDataParsed)
@@ -92,9 +89,11 @@ func roadmap(session *discordgo.Session, message *discordgo.MessageCreate, statu
 			}
 		}
 	}
+
 	for projectName, projectUsers := range projectList {
 		roadMessage = fmt.Sprintf("%s\n\n%s%10s", roadMessage, projectName, projectUsers)
 	}
+
 	roadMessage = fmt.Sprintf("<@%s>, Roadmap for '%s'```%s```", message.Author.ID, status, roadMessage)
 	_, err := session.ChannelMessageSend(message.ChannelID, roadMessage)
 	checkError(err)
@@ -106,25 +105,22 @@ func leaderboard(session *discordgo.Session, message *discordgo.MessageCreate) {
 	userPair := make([]levelNamePair, len(userList)-1)
 	userDataParsed := UserInfoParsed{}
 
-	for i, user := range userList {
-		if i != 0 {
-			fileData, err := ioutil.ReadFile(fmt.Sprintf("data/%s.json", user))
-			checkError(err)
-			err = json.Unmarshal(fileData, &userDataParsed)
-			checkError(err)
-			userPair = append(userPair, levelNamePair{userDataParsed.Login, userDataParsed.Level})
-		}
+	for _, user := range userList[1:] {
+		fileData, err := ioutil.ReadFile(fmt.Sprintf("data/%s.json", user))
+		checkError(err)
+		err = json.Unmarshal(fileData, &userDataParsed)
+		checkError(err)
+		userPair = append(userPair, levelNamePair{userDataParsed.Login, userDataParsed.Level})
 	}
+
 	sort.Slice(userPair, func(i, j int) bool {
 		return userPair[i].level > userPair[j].level
 	})
 
-	for i, user := range userPair {
-		if i > (len(userList) - 2) {
-			break
-		}
+	for i, user := range userPair[:len(userList)-1] {
 		leadMessage = fmt.Sprintf("%s\n%2d: %-15s%.2f", leadMessage, i+1, user.name, user.level)
 	}
+
 	leadMessage = fmt.Sprintf("<@%s>```%s```", message.Author.ID, leadMessage)
 	_, err := session.ChannelMessageSend(message.ChannelID, leadMessage)
 	checkError(err)
