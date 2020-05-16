@@ -83,4 +83,11 @@ func messageHandler(session *discordgo.Session, message *discordgo.MessageCreate
 			template(session, message, "bin")
 		}
 	}
+
+	if strings.HasPrefix(message.Content, "!user") {
+		arg := strings.Split(message.Content, " ")
+		if len(arg) > 1 {
+			sendUser(session, message, arg[1])
+		}
+	}
 }

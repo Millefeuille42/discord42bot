@@ -16,6 +16,37 @@ type levelNamePair struct {
 	level float64
 }
 
+func sendUser(session *discordgo.Session, message *discordgo.MessageCreate, user string) {
+	if !Find(os.Args, user) {
+		return
+	}
+
+	userDataParsed := UserInfoParsed{}
+
+	fileData, err := ioutil.ReadFile(fmt.Sprintf("data/%s.json", user))
+	checkError(err)
+	err = json.Unmarshal(fileData, &userDataParsed)
+	checkError(err)
+
+	userMessage := fmt.Sprintf("<@%s>\n"+
+		"```"+
+		"\n\tEmail:                 %s"+
+		"\n\tBlackhole dans:        %d jours"+
+		"\n\tCorrection Points:     %d"+
+		"\n\tWallet:                %d"+
+		"\n\tNiveau:                %.2f"+
+		"```",
+		message.Author.ID,
+		userDataParsed.Email,
+		userDataParsed.BlackHole,
+		userDataParsed.CorrectionPoint,
+		userDataParsed.Wallet,
+		userDataParsed.Level,
+	)
+
+	_, err = session.ChannelMessageSend(message.ChannelID, userMessage)
+}
+
 func template(session *discordgo.Session, message *discordgo.MessageCreate, object string) {
 
 	if !Find([]string{"lib", "bin"}, object) {
