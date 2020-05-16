@@ -52,8 +52,14 @@ func parseFileToLines(path string) ([]string, int) {
 }
 
 func phrasePicker(path string) string {
+	var phrase string
+
 	lines, lineNum := parseFileToLines(path)
-	phrase := lines[rand.Intn(lineNum)-1]
+	if lineNum <= 1 {
+		phrase = lines[0]
+	} else {
+		phrase = lines[rand.Intn(lineNum-1)]
+	}
 
 	return phrase
 }

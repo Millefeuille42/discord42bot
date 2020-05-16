@@ -17,7 +17,6 @@ func writeUsers(api Api42, session *discordgo.Session, callNbr int) {
 
 	for i, user := range userList {
 		if i != 0 {
-			var oldTime = time.Now()
 			api.UserData.getUserInfo(user, api.Token)
 			fmt.Println(fmt.Sprintf("Request %06d:\n\tGot raw data from %s", i+((len(userList)-1)*callNbr), user))
 
@@ -25,7 +24,7 @@ func writeUsers(api Api42, session *discordgo.Session, callNbr int) {
 			fmt.Println("\tProcessed raw data")
 
 			checkUserFile(user, userDataParsed, session)
-			time.Sleep(3000*time.Millisecond - time.Now().Sub(oldTime))
+			time.Sleep(4000)
 		}
 	}
 }
