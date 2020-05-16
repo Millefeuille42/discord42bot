@@ -65,12 +65,22 @@ func messageHandler(session *discordgo.Session, message *discordgo.MessageCreate
 	if message.Content == "!leaderboard" {
 		leaderboard(session, message)
 	}
+
 	if strings.HasPrefix(message.Content, "!roadmap") {
 		arg := strings.Split(message.Content, "-")
 		if len(arg) > 1 {
 			roadmap(session, message, arg[1])
 		} else {
 			roadmap(session, message, "in_progress")
+		}
+	}
+
+	if strings.HasPrefix(message.Content, "!template") {
+		arg := strings.Split(message.Content, "-")
+		if len(arg) > 1 {
+			template(session, message, arg[1])
+		} else {
+			template(session, message, "bin")
 		}
 	}
 }

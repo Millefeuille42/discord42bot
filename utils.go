@@ -1,8 +1,16 @@
 package main
 
+import "log"
+
 func checkError(err error) {
 	if err != nil {
 		panic(err)
+	}
+}
+
+func logError(err error) {
+	if err != nil {
+		log.Print(err)
 	}
 }
 

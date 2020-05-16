@@ -1,10 +1,12 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"github.com/bwmarrin/discordgo"
 	"io/ioutil"
+	"log"
 	"os"
 	"sort"
 )
@@ -12,6 +14,22 @@ import (
 type levelNamePair struct {
 	name  string
 	level float64
+}
+
+func template(session *discordgo.Session, message *discordgo.MessageCreate, object string) {
+
+	if !Find([]string{"lib", "bin"}, object) {
+		return
+	}
+
+	file, err := ioutil.ReadFile(fmt.Sprintf("data/templates/%s", object))
+	if err != nil {
+		log.Print(err)
+		return
+	}
+
+	_, err = session.ChannelFileSend(message.ChannelID, "Makefile_"+object, bytes.NewReader(file))
+	logError(err)
 }
 
 func roadmap(session *discordgo.Session, message *discordgo.MessageCreate, status string) {
