@@ -51,6 +51,9 @@ func main() {
 	var callNbr = 0
 	for {
 		writeUsers(api, discordBot, callNbr)
+		api.Token.getToken()
+		fmt.Println("42 Token acquired")
+		fmt.Println("Expires in:", api.Token.ExpiresIn)
 		callNbr++
 	}
 }
