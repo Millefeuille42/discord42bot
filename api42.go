@@ -61,7 +61,7 @@ func (token *OAuthToken) getToken() {
 	checkError(json.Unmarshal(body, &token))
 }
 
-func getUserInfo(user string, token OAuthToken, userData UserInfo) UserInfo {
+func getUserInfo(user string, token *OAuthToken, userData UserInfo) UserInfo {
 	var url = fmt.Sprintf("https://api.intra.42.fr/v2/users/%s/", user)
 
 	req, err := http.NewRequest("GET", url, bytes.NewBuffer([]byte("")))
@@ -74,6 +74,12 @@ func getUserInfo(user string, token OAuthToken, userData UserInfo) UserInfo {
 	if res.Status == "429 Too Many Requests" {
 		timeToSleep, _ := strconv.Atoi(res.Header["Retry-After"][0])
 		time.Sleep(time.Duration(timeToSleep+2) * time.Second)
+		res, err = http.DefaultClient.Do(req)
+		checkError(err)
+	}
+
+	if res.Status == "401 Unauthorized" {
+		token.getToken()
 		res, err = http.DefaultClient.Do(req)
 		checkError(err)
 	}

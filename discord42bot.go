@@ -18,7 +18,7 @@ func writeUsers(api Api42, session *discordgo.Session, callNbr int) {
 		userData := UserInfo{}
 		userDataParsed := UserInfoParsed{}
 
-		userData = getUserInfo(user, api.Token, userData)
+		userData = getUserInfo(user, &api.Token, userData)
 		fmt.Println(fmt.Sprintf("Request %06d:\n\tGot raw data from %s", i+((len(userList)-1)*callNbr), user))
 		userDataParsed = processUserInfo(userData)
 		fmt.Println("\tProcessed raw data")
@@ -53,9 +53,6 @@ func main() {
 	var callNbr = 0
 	for {
 		writeUsers(api, discordBot, callNbr)
-		api.Token.getToken()
-		fmt.Println("42 Token acquired")
-		fmt.Println("Expires in:", api.Token.ExpiresIn)
 		callNbr++
 	}
 }
