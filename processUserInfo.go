@@ -35,8 +35,12 @@ func processUserInfo(userData UserInfo) UserInfoParsed {
 		userDataParsed.Location = "null"
 	}
 
-	userDataParsed.BlackHole = int(userData.CursusUsers[1].BlackHoledAt.Sub(time.Now()).Hours() / 24)
-	userDataParsed.Level = userData.CursusUsers[1].Level
+	for _, cursus := range userData.CursusUsers {
+		if cursus.CursusID == 21 {
+			userDataParsed.BlackHole = int(cursus.BlackHoledAt.Sub(time.Now()).Hours() / 24)
+			userDataParsed.Level = cursus.Level
+		}
+	}
 
 	userDataParsed.Projects = make(map[string]Project)
 
