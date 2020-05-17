@@ -70,10 +70,10 @@ func roadmap(session *discordgo.Session, message *discordgo.MessageCreate, statu
 
 	roadMessage := ""
 	userList := os.Args
-	userDataParsed := UserInfoParsed{}
 	projectList := make(map[string]string, 0)
 
 	for _, user := range userList[1:] {
+		userDataParsed := UserInfoParsed{}
 		fileData, err := ioutil.ReadFile(fmt.Sprintf("data/%s.json", user))
 		checkError(err)
 		err = json.Unmarshal(fileData, &userDataParsed)
