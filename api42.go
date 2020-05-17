@@ -61,7 +61,7 @@ func (token *OAuthToken) getToken() {
 	checkError(json.Unmarshal(body, &token))
 }
 
-func (userData *UserInfo) getUserInfo(user string, token OAuthToken) {
+func getUserInfo(user string, token OAuthToken, userData UserInfo) UserInfo {
 	var url = fmt.Sprintf("https://api.intra.42.fr/v2/users/%s/", user)
 
 	req, err := http.NewRequest("GET", url, bytes.NewBuffer([]byte("")))
@@ -84,4 +84,6 @@ func (userData *UserInfo) getUserInfo(user string, token OAuthToken) {
 	defer res.Body.Close()
 
 	checkError(json.Unmarshal(body, &userData))
+
+	return userData
 }

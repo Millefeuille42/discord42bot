@@ -13,12 +13,14 @@ import (
 func writeUsers(api Api42, session *discordgo.Session, callNbr int) {
 
 	var userList = os.Args
-	userDataParsed := UserInfoParsed{}
 
 	for i, user := range userList[1:] {
-		api.UserData.getUserInfo(user, api.Token)
+		userData := UserInfo{}
+		userDataParsed := UserInfoParsed{}
+
+		userData = getUserInfo(user, api.Token, userData)
 		fmt.Println(fmt.Sprintf("Request %06d:\n\tGot raw data from %s", i+((len(userList)-1)*callNbr), user))
-		userDataParsed = processUserInfo(api.UserData)
+		userDataParsed = processUserInfo(userData)
 		fmt.Println("\tProcessed raw data")
 		checkUserFile(user, userDataParsed, session)
 		time.Sleep(3000 * time.Millisecond)
