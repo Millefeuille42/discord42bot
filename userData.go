@@ -8,29 +8,35 @@ import (
 	"os"
 )
 
-func compareData(fileData []byte, userData UserInfoParsed, session *discordgo.Session) {
+func compareData(fileData []byte, newUserData UserInfoParsed, session *discordgo.Session) {
 	fileDataJson := UserInfoParsed{}
 
 	err := json.Unmarshal(fileData, &fileDataJson)
 	checkError(err)
 
-	if fileDataJson.Location != userData.Location {
+	if fileDataJson.Location != newUserData.Location {
 		switch {
 		case fileDataJson.Location == "null":
-			announceLocation("login", userData, fileDataJson, session)
-		case userData.Location == "null":
-			announceLocation("logout", userData, fileDataJson, session)
+			announceLocation("login", newUserData, fileDataJson, session)
+		case newUserData.Location == "null":
+			announceLocation("logout", newUserData, fileDataJson, session)
 		default:
-			announceLocation("newPos", userData, fileDataJson, session)
+			announceLocation("newPos", newUserData, fileDataJson, session)
 		}
 	}
 
-	for project, newProjectData := range userData.Projects {
+	for project, oldProjectData := range fileDataJson.Projects {
+		if _, exists := newUserData.Projects[project]; !exists {
+			newUserData.Projects[project] = oldProjectData
+		}
+	}
+
+	for project, newProjectData := range newUserData.Projects {
 		if oldProjectData, exists := fileDataJson.Projects[project]; !exists {
-			announceProject("started", userData, project, session, fileDataJson)
+			announceProject("started", newUserData, project, session, fileDataJson)
 		} else if status := newProjectData.ProjectStatus; status != oldProjectData.ProjectStatus {
 			if status == "finished" {
-				announceProject(status, userData, project, session, fileDataJson)
+				announceProject(status, newUserData, project, session, fileDataJson)
 			}
 		}
 	}
