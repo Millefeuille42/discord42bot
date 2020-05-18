@@ -16,7 +16,7 @@ LIB		    =	ar rc
 
 RM		    =	rm -f
 
-FLAGS	    =	-Wall -Wextra -Werror ${INCL} ${EX_LIB_1}
+FLAGS	    =	-Wall -Wextra -Werror  -std=c99 -pedantic-errors ${INCL} ${EX_LIB_1}
 
 .c.o	:
 			${COMPILE} ${FLAGS} -c $< -o ${<:.c=.o}

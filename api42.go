@@ -61,7 +61,7 @@ func (token *OAuthToken) getToken() {
 	checkError(json.Unmarshal(body, &token))
 }
 
-func getUserInfo(user string, token *OAuthToken, userData UserInfo) UserInfo {
+func getUserInfo(user string, token OAuthToken, userData UserInfo) (UserInfo, OAuthToken) {
 	var url = fmt.Sprintf("https://api.intra.42.fr/v2/users/%s/", user)
 
 	req, err := http.NewRequest("GET", url, bytes.NewBuffer([]byte("")))
@@ -78,8 +78,10 @@ func getUserInfo(user string, token *OAuthToken, userData UserInfo) UserInfo {
 		checkError(err)
 	}
 
-	if res.Status == "401 Unauthorized" {
+	if res.Status != "200 OK" {
 		token.getToken()
+		fmt.Println("42 Token acquired")
+		fmt.Println("Expires in:", token.ExpiresIn)
 		res, err = http.DefaultClient.Do(req)
 		checkError(err)
 	}
@@ -91,5 +93,5 @@ func getUserInfo(user string, token *OAuthToken, userData UserInfo) UserInfo {
 
 	checkError(json.Unmarshal(body, &userData))
 
-	return userData
+	return userData, token
 }

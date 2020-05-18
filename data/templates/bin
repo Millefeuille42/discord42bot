@@ -12,7 +12,7 @@ EX_LIB_1    = -L # Chemin lib # -l# lib #
 NAME	    =	# Nom.a #
 
 COMPILE	    =	clang
-FLAGS	    =	-Wall -Wextra -Werror ${INCL} ${EX_LIB_1}
+FLAGS	    =	-Wall -Wextra -Werror -std=c99 -pedantic-errors ${INCL} ${EX_LIB_1}
 
 RM		    =	rm -f
 
