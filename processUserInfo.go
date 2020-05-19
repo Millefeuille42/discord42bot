@@ -20,7 +20,7 @@ type UserInfoParsed struct {
 	Projects        map[string]Project
 }
 
-func processUserInfo(userData UserInfo) UserInfoParsed {
+func processUserInfo(userData UserInfo) (UserInfoParsed, error) {
 
 	project := Project{}
 	userDataParsed := UserInfoParsed{}
@@ -52,5 +52,5 @@ func processUserInfo(userData UserInfo) UserInfoParsed {
 		}
 	}
 
-	return userDataParsed
+	return userDataParsed, nil
 }

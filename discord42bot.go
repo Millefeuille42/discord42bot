@@ -17,12 +17,22 @@ func writeUsers(api Api42, session *discordgo.Session, callNbr int) {
 	for i, user := range userList[1:] {
 		userData := UserInfo{}
 		userDataParsed := UserInfoParsed{}
+		var err error
 
-		userData, api.Token = getUserInfo(user, api.Token, userData)
+		userData, api.Token, err = getUserInfo(user, api.Token, userData)
+		if err != nil {
+			continue
+		}
 		fmt.Println(fmt.Sprintf("Request %06d:\n\tGot raw data from %s", i+((len(userList)-1)*callNbr), user))
-		userDataParsed = processUserInfo(userData)
+		userDataParsed, err = processUserInfo(userData)
+		if err != nil {
+			continue
+		}
 		fmt.Println("\tProcessed raw data")
-		checkUserFile(user, userDataParsed, session)
+		err = checkUserFile(user, userDataParsed, session)
+		if err != nil {
+			continue
+		}
 		time.Sleep(3000 * time.Millisecond)
 	}
 }
@@ -35,7 +45,8 @@ func main() {
 	err := godotenv.Load("dev.env")
 	checkError(err)
 
-	api.Token.getToken()
+	err = api.Token.getToken()
+	checkError(err)
 	fmt.Println("42 Token acquired")
 	fmt.Println("Expires in:", api.Token.ExpiresIn)
 

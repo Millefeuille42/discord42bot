@@ -8,11 +8,13 @@ import (
 	"os"
 )
 
-func compareData(fileData []byte, newUserData UserInfoParsed, session *discordgo.Session) {
+func compareData(fileData []byte, newUserData UserInfoParsed, session *discordgo.Session) error {
 	fileDataJson := UserInfoParsed{}
 
 	err := json.Unmarshal(fileData, &fileDataJson)
-	checkError(err)
+	if err != nil {
+		return err
+	}
 
 	if fileDataJson.Location != newUserData.Location {
 		switch {
@@ -40,9 +42,10 @@ func compareData(fileData []byte, newUserData UserInfoParsed, session *discordgo
 			}
 		}
 	}
+	return nil
 }
 
-func checkUserFile(user string, userData UserInfoParsed, session *discordgo.Session) {
+func checkUserFile(user string, userData UserInfoParsed, session *discordgo.Session) error {
 	var path = fmt.Sprintf("./data/%s.json", user)
 
 	_, err := os.Stat(path)
@@ -50,20 +53,32 @@ func checkUserFile(user string, userData UserInfoParsed, session *discordgo.Sess
 		fmt.Println("\tData file not found")
 
 		file, err := os.Create(path)
-		checkError(err)
+		if err != nil {
+			return err
+		}
 		defer file.Close()
 
 		fmt.Println("\tData file created")
 	} else {
 		fileData, err := ioutil.ReadFile(path)
-		checkError(err)
-		compareData(fileData, userData, session)
+		if err != nil {
+			return err
+		}
+		err = compareData(fileData, userData, session)
+		if err != nil {
+			return err
+		}
 	}
 
 	jsonData, err := json.MarshalIndent(userData, "", "\t")
-	checkError(err)
+	if err != nil {
+		return err
+	}
 
 	err = ioutil.WriteFile(path, jsonData, 0644)
-	checkError(err)
+	if err != nil {
+		return err
+	}
 	fmt.Println("\tData written to file")
+	return nil
 }
