@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"golang.org/x/crypto/openpgp/errors"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -94,15 +95,7 @@ func getUserInfo(user string, token OAuthToken, userData UserInfo) (UserInfo, OA
 	if res.Status != "200 OK" {
 		defer res.Body.Close()
 		err = token.getToken()
-		if err != nil {
-			return userData, token, err
-		}
-		fmt.Println("42 Token acquired")
-		fmt.Println("Expires in:", token.ExpiresIn)
-		res, err = http.DefaultClient.Do(req)
-		if err != nil {
-			return userData, token, err
-		}
+		return userData, token, errors.UnsupportedError("API Error")
 	}
 
 	body, err := ioutil.ReadAll(res.Body)
