@@ -57,13 +57,14 @@ func (token *OAuthToken) getToken() error {
 
 	body, err := ioutil.ReadAll(response.Body)
 	if err != nil {
+		defer response.Body.Close()
 		return err
 	}
 
 	defer response.Body.Close()
 
-	checkError(json.Unmarshal(body, &token))
-	return nil
+	err = json.Unmarshal(body, &token)
+	return err
 }
 
 func getUserInfo(user string, token OAuthToken, userData UserInfo) (UserInfo, OAuthToken, error) {
@@ -81,6 +82,7 @@ func getUserInfo(user string, token OAuthToken, userData UserInfo) (UserInfo, OA
 	}
 
 	if res.Status == "429 Too Many Requests" {
+		defer res.Body.Close()
 		timeToSleep, _ := strconv.Atoi(res.Header["Retry-After"][0])
 		time.Sleep(time.Duration(timeToSleep+2) * time.Second)
 		res, err = http.DefaultClient.Do(req)
@@ -90,6 +92,7 @@ func getUserInfo(user string, token OAuthToken, userData UserInfo) (UserInfo, OA
 	}
 
 	if res.Status != "200 OK" {
+		defer res.Body.Close()
 		err = token.getToken()
 		if err != nil {
 			return userData, token, err
@@ -104,12 +107,12 @@ func getUserInfo(user string, token OAuthToken, userData UserInfo) (UserInfo, OA
 
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
+		defer res.Body.Close()
 		return userData, token, err
 	}
 
 	defer res.Body.Close()
 
-	checkError(json.Unmarshal(body, &userData))
-
-	return userData, token, nil
+	err = json.Unmarshal(body, &userData)
+	return userData, token, err
 }
