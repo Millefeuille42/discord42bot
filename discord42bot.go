@@ -21,16 +21,19 @@ func writeUsers(api Api42, session *discordgo.Session, callNbr int) {
 
 		userData, api.Token, err = getUserInfo(user, api.Token, userData)
 		if err != nil {
+			logError(err)
 			continue
 		}
 		fmt.Println(fmt.Sprintf("Request %06d:\n\tGot raw data from %s", i+((len(userList)-1)*callNbr), user))
 		userDataParsed, err = processUserInfo(userData)
 		if err != nil {
+			logError(err)
 			continue
 		}
 		fmt.Println("\tProcessed raw data")
 		err = checkUserFile(user, userDataParsed, session)
 		if err != nil {
+			logError(err)
 			continue
 		}
 		time.Sleep(3000 * time.Millisecond)

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"golang.org/x/crypto/openpgp/errors"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
 	"strconv"
@@ -73,12 +74,14 @@ func getUserInfo(user string, token OAuthToken, userData UserInfo) (UserInfo, OA
 
 	req, err := http.NewRequest("GET", url, bytes.NewBuffer([]byte("")))
 	if err != nil {
+		log.Print("http.NewRequest(\"GET\", url, bytes.NewBuffer([]byte(\"\")))")
 		return userData, token, err
 	}
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", token.AccessToken))
 
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
+		log.Print("http.DefaultClient.Do(req)")
 		return userData, token, err
 	}
 
@@ -88,6 +91,7 @@ func getUserInfo(user string, token OAuthToken, userData UserInfo) (UserInfo, OA
 		time.Sleep(time.Duration(timeToSleep+2) * time.Second)
 		res, err = http.DefaultClient.Do(req)
 		if err != nil {
+			log.Print("http.DefaultClient.Do(req)")
 			return userData, token, err
 		}
 	}
@@ -95,12 +99,14 @@ func getUserInfo(user string, token OAuthToken, userData UserInfo) (UserInfo, OA
 	if res.Status != "200 OK" {
 		defer res.Body.Close()
 		err = token.getToken()
+		log.Print("200 !OK")
 		return userData, token, errors.UnsupportedError("API Error")
 	}
 
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		defer res.Body.Close()
+		log.Print("ioutil.ReadAll(res.Body)")
 		return userData, token, err
 	}
 
