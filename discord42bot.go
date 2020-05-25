@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-func writeUsers(api Api42, session *discordgo.Session, callNbr int) {
+func writeUsers(api Api42, session *discordgo.Session, callNbr int) Api42 {
 
 	var userList = os.Args
 
@@ -38,6 +38,8 @@ func writeUsers(api Api42, session *discordgo.Session, callNbr int) {
 		}
 		time.Sleep(3000 * time.Millisecond)
 	}
+
+	return api
 }
 
 func main() {
@@ -66,7 +68,7 @@ func main() {
 	setupCloseHandler(discordBot)
 	var callNbr = 0
 	for {
-		writeUsers(api, discordBot, callNbr)
+		api = writeUsers(api, discordBot, callNbr)
 		callNbr++
 	}
 }
