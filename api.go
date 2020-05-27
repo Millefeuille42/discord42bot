@@ -44,9 +44,11 @@ func apiUsers(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusFound)
+	dataEncoder := json.NewEncoder(w)
+	dataEncoder.SetIndent("", "\t")
 
 	if vars["field"] == "all" {
-		err = json.NewEncoder(w).Encode(userData)
+		err = dataEncoder.Encode(userData)
 		if err != nil {
 			_, _ = fmt.Fprintf(w, "Error")
 			w.WriteHeader(http.StatusInternalServerError)
@@ -54,21 +56,21 @@ func apiUsers(w http.ResponseWriter, r *http.Request) {
 	} else {
 		switch vars["field"] {
 		case "Location":
-			err = json.NewEncoder(w).Encode(userData.Location)
+			err = dataEncoder.Encode(userData.Location)
 		case "Email":
-			err = json.NewEncoder(w).Encode(userData.Email)
+			err = dataEncoder.Encode(userData.Email)
 		case "Login":
-			err = json.NewEncoder(w).Encode(userData.Login)
+			err = dataEncoder.Encode(userData.Login)
 		case "Level":
-			err = json.NewEncoder(w).Encode(userData.Level)
+			err = dataEncoder.Encode(userData.Level)
 		case "BlackHole":
-			err = json.NewEncoder(w).Encode(userData.BlackHole)
+			err = dataEncoder.Encode(userData.BlackHole)
 		case "Wallet":
-			err = json.NewEncoder(w).Encode(userData.Wallet)
+			err = dataEncoder.Encode(userData.Wallet)
 		case "CorrectionPoint":
-			err = json.NewEncoder(w).Encode(userData.CorrectionPoint)
+			err = dataEncoder.Encode(userData.CorrectionPoint)
 		case "Projects":
-			err = json.NewEncoder(w).Encode(userData.Projects)
+			err = dataEncoder.Encode(userData.Projects)
 		default:
 			_, _ = fmt.Fprintf(w, "Error: Bad Request")
 			w.WriteHeader(http.StatusBadRequest)
