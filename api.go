@@ -21,14 +21,14 @@ func startApi() {
 
 func apiTest(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
-	_, _ = fmt.Printf("GET '%s'\n\tFrom: %s", r.URL.Path, r.RemoteAddr)
+	_, _ = fmt.Printf("\nGET '%s'\n\tFrom: %s\n", r.URL.Path, r.RemoteAddr)
 }
 
 func apiUsers(w http.ResponseWriter, r *http.Request) {
 	userData := UserInfoParsed{}
 	vars := mux.Vars(r)
 
-	_, _ = fmt.Printf("GET '%s'\n\tFrom: %s", r.URL.Path, r.RemoteAddr)
+	_, _ = fmt.Printf("\nGET '%s'\n\tFrom: %s\n", r.URL.Path, r.RemoteAddr)
 
 	fileData, err := ioutil.ReadFile(fmt.Sprintf("./data/%s.json", vars["user"]))
 	if err != nil {
