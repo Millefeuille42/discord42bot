@@ -65,6 +65,8 @@ func main() {
 	checkError(err)
 	fmt.Println("Discord Bot up and running")
 
+	startApi()
+
 	setupCloseHandler(discordBot)
 	var callNbr = 0
 	for {
