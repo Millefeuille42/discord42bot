@@ -21,6 +21,14 @@ type User struct {
 	Level           float64
 }
 
+type OverTimeData struct {
+	gorm.Model
+	Login           string
+	BlackHole       int
+	CorrectionPoint int
+	Level           float64
+}
+
 func compareData(fileData []byte, newUserData UserInfoParsed, session *discordgo.Session) error {
 	fileDataJson := UserInfoParsed{}
 
@@ -133,6 +141,14 @@ func userDataToDB(user string) {
 	} else {
 		db.Model(&queryUser).Where("login = ?", user).Save(&queryUser)
 	}
+
+	db.AutoMigrate(&OverTimeData{})
+	db.Create(&OverTimeData{
+		Login:           queryUser.Login,
+		BlackHole:       queryUser.BlackHole,
+		CorrectionPoint: queryUser.CorrectionPoint,
+		Level:           queryUser.Level,
+	})
 
 	defer db.Close()
 }
