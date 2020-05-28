@@ -27,6 +27,7 @@ type OverTimeData struct {
 	BlackHole       int
 	CorrectionPoint int
 	Level           float64
+	Location        string
 }
 
 func compareData(fileData []byte, newUserData UserInfoParsed, session *discordgo.Session) error {
@@ -148,6 +149,7 @@ func userDataToDB(user string) {
 		BlackHole:       queryUser.BlackHole,
 		CorrectionPoint: queryUser.CorrectionPoint,
 		Level:           queryUser.Level,
+		Location:        queryUser.Location,
 	})
 
 	defer db.Close()
