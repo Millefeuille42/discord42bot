@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func setVarsToMessage(phrase string, newData UserInfoParsed, oldData UserInfoParsed, project string) string {
+func setVarsToMessage(phrase, project string, newData, oldData UserInfoParsed) string {
 	phrase = strings.ReplaceAll(phrase, "#{userName}", newData.Login)
 	phrase = strings.ReplaceAll(phrase, "#{project}", project)
 	phrase = strings.ReplaceAll(phrase, "#{proverb}", phrasePicker("conf/proverbs.txt"))
