@@ -41,7 +41,7 @@ func parseFileToLines(path string) ([]string, int) {
 
 	for {
 		line, err := reader.ReadString('\n')
-		lines[i] = strings.ReplaceAll(line, "\n", "")
+		lines[i] = strings.Replace(line, "\n", "", -1)
 		if err != nil && err == io.EOF {
 			break
 		}
