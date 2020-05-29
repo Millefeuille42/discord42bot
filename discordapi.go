@@ -21,17 +21,17 @@ func setVarsToMessage(phrase, project string, newData, oldData UserInfoParsed) s
 func announceLocation(param string, newData, oldData UserInfoParsed, session *discordgo.Session) {
 	switch param {
 	case "login":
-		message := setVarsToMessage(phrasePicker("conf/login.txt"), newData, oldData, "")
+		message := setVarsToMessage(phrasePicker("conf/login.txt"), "", newData, oldData)
 		fmt.Println(fmt.Sprintf("\t\tSending login for %s, on %s", newData.Login, newData.Location))
 		_, err := session.ChannelMessageSend("710820070284066822", message)
 		checkError(err)
 	case "logout":
-		message := setVarsToMessage(phrasePicker("conf/logout.txt"), newData, oldData, "")
+		message := setVarsToMessage(phrasePicker("conf/logout.txt"), "", newData, oldData)
 		fmt.Println(fmt.Sprintf("\t\tSending logout for %s", newData.Login))
 		_, err := session.ChannelMessageSend("710820070284066822", message)
 		checkError(err)
 	case "newPos":
-		message := setVarsToMessage(phrasePicker("conf/newPos.txt"), newData, oldData, "")
+		message := setVarsToMessage(phrasePicker("conf/newPos.txt"), "", newData, oldData)
 		fmt.Println(fmt.Sprintf("\t\tSending newPos for %s, from %s to %s", newData.Login, oldData.Location, newData.Location))
 		_, err := session.ChannelMessageSend("710820070284066822", message)
 		checkError(err)
@@ -41,12 +41,12 @@ func announceLocation(param string, newData, oldData UserInfoParsed, session *di
 func announceProject(param, project string, newData, oldData UserInfoParsed, session *discordgo.Session) {
 	switch param {
 	case "finished":
-		message := setVarsToMessage(phrasePicker("conf/finished.txt"), newData, oldData, project)
+		message := setVarsToMessage(phrasePicker("conf/finished.txt"), project, newData, oldData)
 		fmt.Println(fmt.Sprintf("\t\tSending finished for %s, on %s", newData.Login, project))
 		_, err := session.ChannelMessageSend("710820070284066822", message)
 		checkError(err)
 	case "started":
-		message := setVarsToMessage(phrasePicker("conf/started.txt"), newData, oldData, project)
+		message := setVarsToMessage(phrasePicker("conf/started.txt"), project, newData, oldData)
 		fmt.Println(fmt.Sprintf("\t\tSending started for %s, on %s", newData.Login, project))
 		_, err := session.ChannelMessageSend("710820070284066822", message)
 		checkError(err)
