@@ -7,13 +7,13 @@ import (
 )
 
 func setVarsToMessage(phrase, project string, newData, oldData UserInfoParsed) string {
-	phrase = strings.ReplaceAll(phrase, "#{userName}", newData.Login)
-	phrase = strings.ReplaceAll(phrase, "#{project}", project)
-	phrase = strings.ReplaceAll(phrase, "#{proverb}", phrasePicker("conf/proverbs.txt"))
-	phrase = strings.ReplaceAll(phrase, "#{oldLocation}", oldData.Location)
-	phrase = strings.ReplaceAll(phrase, "#{newLocation}", newData.Location)
-	phrase = strings.ReplaceAll(phrase, "#{oldLevel}", fmt.Sprintf("%.2f", oldData.Level))
-	phrase = strings.ReplaceAll(phrase, "#{newLevel}", fmt.Sprintf("%.2f", newData.Level))
+	phrase = strings.Replace(phrase, "#{userName}", newData.Login, -1)
+	phrase = strings.Replace(phrase, "#{project}", project, -1)
+	phrase = strings.Replace(phrase, "#{proverb}", phrasePicker("conf/proverbs.txt"), -1)
+	phrase = strings.Replace(phrase, "#{oldLocation}", oldData.Location, -1)
+	phrase = strings.Replace(phrase, "#{newLocation}", newData.Location, -1)
+	phrase = strings.Replace(phrase, "#{oldLevel}", fmt.Sprintf("%.2f", oldData.Level), -1)
+	phrase = strings.Replace(phrase, "#{newLevel}", fmt.Sprintf("%.2f", newData.Level), -1)
 
 	return phrase
 }
