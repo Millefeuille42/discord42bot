@@ -45,6 +45,7 @@ func sendUser(session *discordgo.Session, message *discordgo.MessageCreate, user
 	)
 
 	_, err = session.ChannelMessageSend(message.ChannelID, userMessage)
+	checkError(err)
 }
 
 func template(session *discordgo.Session, message *discordgo.MessageCreate, object string) {
@@ -70,7 +71,7 @@ func roadmap(session *discordgo.Session, message *discordgo.MessageCreate, statu
 
 	roadMessage := ""
 	userList := os.Args
-	projectList := make(map[string]string, 0)
+	projectList := make(map[string]string)
 
 	for _, user := range userList[1:] {
 		userDataParsed := UserInfoParsed{}

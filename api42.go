@@ -94,7 +94,7 @@ func getUserInfo(user string, token OAuthToken, userData UserInfo) (UserInfo, OA
 
 	if res.Status != "200 OK" {
 		defer res.Body.Close()
-		err = token.getToken()
+		_ = token.getToken()
 		return userData, token, errors.UnsupportedError("API Error")
 	}
 
