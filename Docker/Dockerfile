@@ -40,4 +40,3 @@ RUN go build -o d42b .
 VOLUME ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
 
 CMD service grafana-server start & su postgres -c "/usr/lib/postgresql/11/bin/postgres -D /var/lib/postgresql/11/main -c config_file=/etc/postgresql/11/main/postgresql.conf" & ./d42b ${USERS} & tail -f /dev/null
-
