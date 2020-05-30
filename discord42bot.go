@@ -10,11 +10,11 @@ import (
 	"time"
 )
 
-func writeUsers(api Api42, session *discordgo.Session, callNbr int) Api42 {
+func writeUsers(api Api42, session *discordgo.Session) Api42 {
 
 	var userList = os.Args
 
-	for i, user := range userList[1:] {
+	for _, user := range userList[1:] {
 		userData := UserInfo{}
 		userDataParsed := UserInfoParsed{}
 		var err error
@@ -24,7 +24,7 @@ func writeUsers(api Api42, session *discordgo.Session, callNbr int) Api42 {
 			logError(err)
 			continue
 		}
-		fmt.Println(fmt.Sprintf("Request %06d:\n\tGot raw data from %s", i+((len(userList)-1)*callNbr), user))
+		fmt.Println(fmt.Sprintf("Request:\n\tGot raw data from %s", user))
 		userDataParsed, err = processUserInfo(userData)
 		if err != nil {
 			logError(err)
@@ -69,10 +69,8 @@ func main() {
 	startApi()
 
 	setupCloseHandler(discordBot)
-	var callNbr = 0
 	for {
-		api = writeUsers(api, discordBot, callNbr)
-		callNbr++
+		api = writeUsers(api, discordBot)
 	}
 }
 
