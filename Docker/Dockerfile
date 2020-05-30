@@ -1,0 +1,42 @@
+FROM debian:buster
+MAINTAINER mlabouri@student.42.fr
+ENV DEBIAN_FRONTEND=noninteractive
+
+#Database Related ENVs
+ENV DBUSER=segbot
+ENV DBPASSWORD=segbot
+
+#BotRelated ENVs
+ENV USERS=mlabouri\ tefroiss
+
+#Ports
+EXPOSE 3000
+EXPOSE 5432
+
+RUN apt update && apt -y upgrade
+
+#Install Grafana
+RUN apt install -y apt-transport-https software-properties-common wget adduser libfontconfig1
+RUN wget https://dl.grafana.com/oss/release/grafana_7.0.1_amd64.deb
+RUN dpkg -i grafana_7.0.1_amd64.deb
+
+#Install PostgreSQL
+RUN apt install -y postgresql libpq-dev postgresql-client postgresql-client-common
+USER postgres
+RUN /etc/init.d/postgresql start &&\
+    psql --command "CREATE USER ${DBUSER} WITH SUPERUSER PASSWORD '${DBPASSWORD}';" &&\
+    createdb -O ${DBUSER} segbot
+RUN echo "host all  all  0.0.0.0/0  md5" >> /etc/postgresql/11/main/pg_hba.conf
+RUN echo "listen_addresses='*'" >> /etc/postgresql/11/main/postgresql.conf
+
+USER root
+#Install segBot
+RUN apt install -y golang git
+RUN git clone https://github.com/Millefeuille42/discord42bot /home/d42b
+ADD srcs/botenvs.env /home/d42b/dev.env
+WORKDIR home/d42b/
+RUN go build -o d42b .
+
+VOLUME ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
+
+CMD service grafana-server start & su postgres -c "/usr/lib/postgresql/11/bin/postgres -D /var/lib/postgresql/11/main -c config_file=/etc/postgresql/11/main/postgresql.conf" & ./d42b ${USERS} & tail -f /dev/null
