@@ -108,6 +108,11 @@ func userDataToDB(user string) {
 	var queryUser User
 	userData := UserInfoParsed{}
 
+	_, err := os.Stat(fmt.Sprintf("./data/%s.json", user))
+	if os.IsNotExist(err) {
+		return
+	}
+
 	fileData, err := ioutil.ReadFile(fmt.Sprintf("./data/%s.json", user))
 	if err != nil {
 		return

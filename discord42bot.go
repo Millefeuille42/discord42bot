@@ -36,7 +36,6 @@ func writeUsers(api Api42, session *discordgo.Session) Api42 {
 			logError(err)
 			continue
 		}
-		userDataToDB(user)
 		time.Sleep(3000 * time.Millisecond)
 	}
 
@@ -67,8 +66,20 @@ func main() {
 	fmt.Println("Discord Bot up and running")
 
 	startApi()
+	fmt.Println("API Started")
 
 	setupCloseHandler(discordBot)
+
+	go func() {
+		var userList = os.Args
+		for {
+			time.Sleep(1 * time.Minute)
+			for _, user := range userList[1:] {
+				userDataToDB(user)
+			}
+		}
+	}()
+
 	for {
 		api = writeUsers(api, discordBot)
 	}
@@ -80,6 +91,7 @@ func setupCloseHandler(session *discordgo.Session) {
 	go func() {
 		<-c
 		fmt.Println("\r- Ctrl+C pressed in Terminal")
+		time.Sleep(2 * time.Second)
 		_ = session.Close()
 		os.Exit(0)
 	}()
