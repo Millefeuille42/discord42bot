@@ -29,6 +29,13 @@ type OverTimeData struct {
 	Level           float64
 }
 
+type ProjectData struct {
+	gorm.Model
+	ProjectName   string
+	ProjectStatus string
+	ProjectUser   string
+}
+
 func compareData(fileData []byte, newUserData UserInfoParsed, session *discordgo.Session) error {
 	fileDataJson := UserInfoParsed{}
 
@@ -154,6 +161,24 @@ func userDataToDB(user string) {
 		CorrectionPoint: queryUser.CorrectionPoint,
 		Level:           queryUser.Level,
 	})
+
+	db.AutoMigrate(&ProjectData{})
+	for _, pr := range userData.Projects {
+		queryProject := ProjectData{}
+
+		db.Find(&queryProject, "project_name = ? AND project_user = ?", pr.ProjectName, user)
+		exists := queryProject.ProjectUser
+
+		queryProject.ProjectName = pr.ProjectName
+		queryProject.ProjectStatus = pr.ProjectStatus
+		queryProject.ProjectUser = user
+
+		if exists == "" {
+			db.Create(&queryProject)
+		} else {
+			db.Model(&queryProject).Where("project_name = ? AND project_user = ?", pr.ProjectName, user).Save(&queryProject)
+		}
+	}
 
 	defer db.Close()
 }
