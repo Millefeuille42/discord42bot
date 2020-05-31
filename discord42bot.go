@@ -73,10 +73,10 @@ func main() {
 	go func() {
 		var userList = os.Args
 		for {
-			time.Sleep(1 * time.Minute)
 			for _, user := range userList[1:] {
 				userDataToDB(user)
 			}
+			time.Sleep(1 * time.Minute)
 		}
 	}()
 
