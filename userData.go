@@ -111,7 +111,7 @@ func checkUserFile(user string, userData UserInfoParsed, session *discordgo.Sess
 	return nil
 }
 
-func userDataToDB(user string) {
+func staticDataToDB(user string) {
 	var queryUser User
 	userData := UserInfoParsed{}
 
@@ -153,6 +153,32 @@ func userDataToDB(user string) {
 	} else {
 		db.Model(&queryUser).Where("login = ?", user).Save(&queryUser)
 	}
+	defer db.Close()
+}
+
+func userDataToDB(user string) {
+	var queryUser User
+	userData := UserInfoParsed{}
+
+	_, err := os.Stat(fmt.Sprintf("./data/%s.json", user))
+	if os.IsNotExist(err) {
+		return
+	}
+
+	fileData, err := ioutil.ReadFile(fmt.Sprintf("./data/%s.json", user))
+	if err != nil {
+		return
+	}
+	err = json.Unmarshal(fileData, &userData)
+	if err != nil {
+		return
+	}
+
+	db, err := gorm.Open("postgres", fmt.Sprintf("connect_timeout=10 host=%s user=%s dbname=segbot password=%s sslmode=disable",
+		os.Getenv("DBHOST"),
+		os.Getenv("DBUSER"),
+		os.Getenv("DBPASSWORD")))
+	checkError(err)
 
 	db.AutoMigrate(&OverTimeData{})
 	db.Create(&OverTimeData{

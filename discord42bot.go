@@ -36,9 +36,9 @@ func writeUsers(api Api42, session *discordgo.Session) Api42 {
 			logError(err)
 			continue
 		}
+		staticDataToDB(user)
 		time.Sleep(3000 * time.Millisecond)
 	}
-
 	return api
 }
 
