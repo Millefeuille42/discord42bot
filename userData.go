@@ -174,6 +174,14 @@ func userDataToDB(user string) {
 		return
 	}
 
+	queryUser.Login = userData.Login
+	queryUser.Email = userData.Email
+	queryUser.Location = userData.Location
+	queryUser.CorrectionPoint = userData.CorrectionPoint
+	queryUser.Wallet = userData.Wallet
+	queryUser.BlackHole = userData.BlackHole
+	queryUser.Level = userData.Level
+
 	db, err := gorm.Open("postgres", fmt.Sprintf("connect_timeout=10 host=%s user=%s dbname=segbot password=%s sslmode=disable",
 		os.Getenv("DBHOST"),
 		os.Getenv("DBUSER"),
